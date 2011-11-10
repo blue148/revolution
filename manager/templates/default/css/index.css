@@ -1157,14 +1157,12 @@ body.ext-ie6 .x-superboxselect-item {margin: 2px 1px 2px 1px; line-height: 1.2em
 .actions {
 	bottom:8px;
 	margin:0;
-	overflow:hidden;
-	position:absolute;
 }
 
 .actions li {
 	float:left;
 	line-height:0.7;
-	margin-right:2px;
+	margin: 2px 2px 0 0;
 }
 .actions button, 
 .inline-button {
