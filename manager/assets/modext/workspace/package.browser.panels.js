@@ -134,7 +134,7 @@ MODx.grid.PackageBrowserGrid = function(config) {
 	
 	this.exp = new Ext.grid.RowExpander({
         tpl : new Ext.Template(
-            '<p class="package-readme"><i>{description}</i></p>'
+            '<p class="desc">{description}</p>'
         )
     });
 

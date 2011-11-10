@@ -2,7 +2,7 @@ MODx.grid.PackageVersions = function(config) {
     config = config || {};
     this.exp = new Ext.grid.RowExpander({
         tpl : new Ext.Template(
-            '<p class="package-readme"><i>{readme}</i></p>'
+            '<p class="desc">{readme}</p>'
         )
     });    
     Ext.applyIf(config,{

@@ -1154,9 +1154,14 @@ body.ext-ie6 .x-superboxselect-item {margin: 2px 1px 2px 1px; line-height: 1.2em
 .right-col{ padding-left: 15px; }
 
 /* Action buttons */
+.main-column {
+    min-height: 55px;
+}
 .actions {
 	bottom:8px;
 	margin:0;
+	overflow:hidden;
+	position:absolute;
 }
 
 .actions li {
@@ -1659,8 +1664,8 @@ span.required {
 #modx-grid-package .red { color: green !important; text-align: center; }
 
 .grid-with-buttons .x-grid3-row-expanded .x-grid3-row-body {
-    margin: -45px 2px 0 -20px;
-    padding: 18px 25px 40px;
+    margin: -60px 2px 0 -20px;
+    padding: 18px 25px 45px;
 }
 
 /* Package browser */
@@ -1826,8 +1831,6 @@ span.required {
 .modx-pb-fullview {
     text-align: center;
 }
-
-.package-readme { padding: 8px 11px 0px; }
 
 /* Template sidebar */
 #modx-package-browser-home {

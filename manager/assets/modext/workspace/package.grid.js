@@ -10,7 +10,7 @@ MODx.grid.Package = function(config) {
     config = config || {};
     this.exp = new Ext.grid.RowExpander({
         tpl : new Ext.XTemplate(
-            '<p class="package-readme"><i>{readme}</i></p>'
+            '<p class="desc">{readme}</p>'
         )
     });
 	
