@@ -168,7 +168,8 @@ Ext.extend(MODx.grid.Package,MODx.grid.Grid,{
                 return _('not_installed');
             default:
                 c.css = '';
-                return _('installed_on',{'time':d});
+                var txt = _('installed_on',{'time':d});
+                return (txt != 'undefined') ? txt : d;
         }
     }
     
