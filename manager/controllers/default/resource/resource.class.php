@@ -22,6 +22,7 @@ abstract class ResourceManagerController extends modManagerController {
     /** @var array $rteFields */
     public $rteFields = array();
 
+    /** @var modRegister $reg */
     protected $reg;
 
     public $canPublish = true;
@@ -45,13 +46,17 @@ abstract class ResourceManagerController extends modManagerController {
         $isDerivative = false;
         if (!empty($_REQUEST['class_key'])) {
             $isDerivative = true;
-            $resourceClass = in_array($_REQUEST['class_key'],array('modDocument','modResource')) ? 'modResource' : $_REQUEST['class_key'];
+            $resourceClass = in_array($_REQUEST['class_key'],array('modDocument','modResource')) ? 'modDocument' : $_REQUEST['class_key'];
+            if ($resourceClass == 'modResource') $resourceClass = 'modDocument';
         } else if (!empty($_REQUEST['id'])) {
             /** @var modResource $resource */
             $resource = $modx->getObject('modResource',$_REQUEST['id']);
             if ($resource && !in_array($resource->get('class_key'),array('modDocument','modResource'))) {
                 $isDerivative = true;
                 $resourceClass = $resource->get('class_key');
+            } else if ($resource->get('class_key') == 'modResource') { /* fix improper class key */
+                $resource->set('class_key','modDocument');
+                $resource->save();
             }
         }
 
@@ -62,6 +67,11 @@ abstract class ResourceManagerController extends modManagerController {
             $action = strtolower(str_replace(array('Resource','ManagerController'),'',$className));
             $className = str_replace('mod','',$resourceClass).ucfirst($action).'ManagerController';
             $controllerFile = $delegateView.$action.'.class.php';
+            if (!file_exists($controllerFile)) {
+                $modx->setOption('manager_theme','default');
+                $delegateView = $modx->call($resourceClass,'getControllerPath',array(&$modx));
+                $controllerFile = $delegateView.$action.'.class.php';
+            }
             require_once $controllerFile;
         }
         $controller = new $className($modx,$config);
@@ -230,6 +240,7 @@ abstract class ResourceManagerController extends modManagerController {
         $emptyCategory->id = 0;
         $categories[0] = $emptyCategory;
         $tvMap = array();
+        $hidden = array();
         $templateId = $this->resource->get('template');
         if ($templateId && ($template = $this->modx->getObject('modTemplate', $templateId))) {
             $tvs = array();
@@ -256,7 +267,10 @@ abstract class ResourceManagerController extends modManagerController {
 
                 $reloading = !empty($reloadData) && count($reloadData) > 0;
                 $this->modx->smarty->assign('tvcount',count($tvs));
+                /** @var modTemplateVar $tv */
                 foreach ($tvs as $tv) {
+                    $v = '';
+                    $tv->set('inherited', false);
                     $cat = (int)$tv->get('category');
                     $tvid = $tv->get('id');
                     if($reloading && array_key_exists('tv'.$tvid, $reloadData)) {
@@ -278,36 +292,40 @@ abstract class ResourceManagerController extends modManagerController {
 
                     if ($tv->get('type') == 'richtext') {
                         $this->rteFields = array_merge($this->rteFields,array(
-                            'tv' . $tv->id,
+                            'tv' . $tv->get('id'),
                         ));
                     }
                     $inputForm = $tv->renderInput($this->resource->get('id'), array('value'=> $v));
                     if (empty($inputForm)) continue;
 
                     $tv->set('formElement',$inputForm);
-                    if (!is_array($categories[$cat]->tvs)) {
-                        $categories[$cat]->tvs = array();
-                        $categories[$cat]->tvCount = 0;
-                    }
-
-                    /* add to tv/category map */
-                    $tvMap[$tv->id] = $tv->category;
-
-                    /* add TV to category array */
-                    $categories[$cat]->tvs[] = $tv;
                     if ($tv->get('type') != 'hidden') {
-                        $categories[$cat]->tvCount++;
+                        if (!isset($categories[$cat]->tvs) || !is_array($categories[$cat]->tvs)) {
+                            $categories[$cat]->tvs = array();
+                            $categories[$cat]->tvCount = 0;
+                        }
+
+                        /* add to tv/category map */
+                        $tvMap[$tv->get('id')] = $tv->category;
+
+                        /* add TV to category array */
+                        $categories[$cat]->tvs[] = $tv;
+                        if ($tv->get('type') != 'hidden') {
+                            $categories[$cat]->tvCount++;
+                        }
+                    } else {
+                        $hidden[] = $tv;
                     }
                 }
             }
         }
 
-        $this->tvCounts = array();
         $finalCategories = array();
+        /** @var modCategory $category */
         foreach ($categories as $n => $category) {
             if (is_object($category) && $category instanceof modCategory) {
                 $category->hidden = empty($category->tvCount) ? true : false;
-                $ct = count($category->tvs);
+                $ct = isset($category->tvs) ? count($category->tvs) : 0;
                 if ($ct > 0) {
                     $finalCategories[$category->get('id')] = $category;
                     $this->tvCounts[$n] = $ct;
@@ -320,6 +338,7 @@ abstract class ResourceManagerController extends modManagerController {
             'template' => $templateId,
             'resource' => $this->resource->get('id'),
             'tvCounts' => &$this->tvCounts,
+            'hidden' => &$hidden,
         ));
         if (is_array($onResourceTVFormRender)) {
             $onResourceTVFormRender = implode('',$onResourceTVFormRender);
@@ -329,6 +348,7 @@ abstract class ResourceManagerController extends modManagerController {
         $this->setPlaceholder('categories',$finalCategories);
         $this->setPlaceholder('tvCounts',$this->modx->toJSON($this->tvCounts));
         $this->setPlaceholder('tvMap',$this->modx->toJSON($tvMap));
+        $this->setPlaceholder('hidden',$hidden);
 
         if (!empty($this->scriptProperties['showCheckbox'])) {
             $this->setPlaceholder('showCheckbox',1);
@@ -383,9 +403,9 @@ abstract class ResourceManagerController extends modManagerController {
                 $modx->registry->addRegister('resource_reload', 'registry.modDbRegister', array('directory' => 'resource_reload'));
                 $this->reg = $modx->registry->resource_reload;
                 if($this->reg->connect()) {
-                    $topic = '/' . $scriptProperties['reload'] . '/';
+                    $topic = '/resourcereload/' . $scriptProperties['reload'] . '/';
                     $this->reg->subscribe($topic);
-                    $reloadData = $this->reg->read(array('poll_limit'=> 1, 'remove_read'=> false));
+                    $reloadData = $this->reg->read(array('poll_limit'=> 1, 'remove_read'=> true));
                     if(is_array($reloadData) && is_string(reset($reloadData))) {
                         $reloadData = @unserialize(reset($reloadData));
                     }
@@ -396,7 +416,43 @@ abstract class ResourceManagerController extends modManagerController {
                 }
             }
         }
+
         return $reloadData;
+    }
+
+
+    public function getResourceGroups() {
+        $parentGroups = array();
+        if ($this->resource->get('id') == 0) {
+            $parent = $this->modx->getObject('modResource',$this->resource->get('parent'));
+            /** @var modResource $parent */
+            if ($parent) {
+                $parentResourceGroups = $parent->getMany('ResourceGroupResources');
+                /** @var modResourceGroupResource $parentResourceGroup */
+                foreach ($parentResourceGroups as $parentResourceGroup) {
+                    $parentGroups[] = $parentResourceGroup->get('document_group');
+                }
+                $parentGroups = array_unique($parentGroups);
+            }
+        }
+
+        $this->resourceArray['resourceGroups'] = array();
+        $resourceGroups = $this->resource->getGroupsList(array('name' => 'ASC'),0,0);
+        /** @var modResourceGroup $resourceGroup */
+        foreach ($resourceGroups['collection'] as $resourceGroup) {
+            $access = (boolean) $resourceGroup->get('access');
+            if (!empty($parent) && $this->resource->get('id') == 0) {
+                $resourceGroupArray['access'] = in_array($resourceGroup->get('id'),$parentGroups) ? true : false;
+            }
+            $resourceGroupArray = array(
+                $resourceGroup->get('id'),
+                $resourceGroup->get('name'),
+                $access,
+            );
+
+            $this->resourceArray['resourceGroups'][] = $resourceGroupArray;
+        }
+        return $this->resourceArray['resourceGroups'];
     }
 
 }

@@ -206,6 +206,9 @@ $_lang['setting_context_tree_sortdir_desc'] = 'L\'ordre de classement des contex
 $_lang['setting_cultureKey'] = 'Langue';
 $_lang['setting_cultureKey_desc'] = 'Sélectionnez la langue pour tous les contextes "non-manager", web inclus.';
 
+$_lang['setting_date_timezone'] = 'Fuseau horaire par défaut';
+$_lang['setting_date_timezone_desc'] = 'Contrôle le fuseau horaire par défaut de PHP (timezone). Si ce paramètre et vide ainsi que le paramètre date.timezone de PHP, UTC sera utilisé.';
+
 $_lang['setting_debug'] = 'Debug';
 $_lang['setting_debug_desc'] = 'Activez ou désactiver le debugging dans MODX et/ou définissez le niveau de error_reporting de PHP. \'\' = utiliser la valeur actuelle de error_reporting, \'0\' = false (error_reporting = 0), \'1\' = true (error_reporting = -1), ou toute autre valeur de error_reporting valide (un entier).';
 
@@ -391,12 +394,14 @@ $_lang['setting_manager_favicon_url'] = 'URL de favicon du manager';
 $_lang['setting_manager_favicon_url_desc'] = 'Utilise le favicon indiqué pour le manager de MODX. Doit être relatif au répertoire manager/ ou une URL absolue.';
 
 $_lang['setting_manager_html5_cache'] = 'Utiliser le cache local HTML5 dans le manager';
-$_lang['setting_manager_html5_cache_desc'] = 'Active le cache local HTML5 pour le manager. Recommendé uniquement avec l\'utilisation de navigateurs récents (supportant le cache HTML5).';
+$_lang['setting_manager_html5_cache_desc'] = 'Expérimental. Active le cache local HTML5 pour le manager. Recommendé uniquement avec l\'utilisation de navigateurs récents (supportant le cache HTML5).';
 
 $_lang['setting_manager_js_cache_file_locking'] = 'Activer le verrouillage des fichiers JS/CSS du manager';
 $_lang['setting_manager_js_cache_file_locking_desc'] = 'Mettre en cache le verrouillage des fichiers. Sélectionnez non si votre système de fichier est NFS.';
 $_lang['setting_manager_js_cache_max_age'] = 'Durée du cache des JS/CSS compressés';
 $_lang['setting_manager_js_cache_max_age_desc'] = 'Durée maximale du cache navigateur pour les fichiers CSS/JS du manager, en secondes. Au delà de ctte période, le navigateur enverra un GET "conditionnel". Utilisez une valeur élevée pour moins de traffic.';
+$_lang['setting_manager_js_document_root'] = 'Compression JS/CSS à la racine';
+$_lang['setting_manager_js_document_root_desc'] = 'Si votre serveur ne prend pas en compte la variable serveur DOCUMENT_ROOT, définissez-la ici pour activer la compression CSS/JS du manager. Ne configurez cette option que si vous savez ce que vous faites.';
 $_lang['setting_manager_js_zlib_output_compression'] = 'Activer la compression zlib pour les JS/CSS du manager';
 $_lang['setting_manager_js_zlib_output_compression_desc'] = 'Autorise ou non la compression zlib sur les fichiers CSS/JS du manager. N\'activez pas cette fonction à moins d\'être sûr que votre configuration PHP autorise le changement de la variable zlib.output_compression à 1. MODX recommande de laisser cette fonction désactivée..';
 
@@ -405,6 +410,9 @@ $_lang['setting_manager_lang_attribute_desc'] = 'Entrez le code de langue qui co
 
 $_lang['setting_manager_language'] = 'Langue du manager';
 $_lang['setting_manager_language_desc'] = 'Sélectionnez la langue pour le gestionnaire de contenu de MODX.';
+
+$_lang['setting_manager_login_url_alternate'] = 'URL alternative de connexion au manager';
+$_lang['setting_manager_login_url_alternate_desc'] = 'Une URL alternative vers laquelle envoyer les utilisateurs non identifiés au manager. Le formulaire de connexion doit identifier l\'utilisateur au contexte « mgr » pour fonctionner.';
 
 $_lang['setting_manager_login_start'] = 'Démarrage après identification au manager';
 $_lang['setting_manager_login_start_desc'] = 'Entrez l\'ID du document vers lequel vous souhaitez envoyer un utilisateur après sa connexion au manager. <strong>NOTE: assurez-vous que l\'ID que vous avez entré appartient à un document existant, publié et accessible par cet utilisateur!</strong>';

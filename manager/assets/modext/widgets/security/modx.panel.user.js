@@ -105,6 +105,7 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
                     return false;
                 }
             });
+            this.clearDirty();
         } else if (userId == 0) {
             location.href = '?a='+MODx.action['security/user']+'&id='+o.result.object.id;
         }
@@ -469,9 +470,11 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
                     ,listeners: {
                         'expand': {fn:function(p) {
                             Ext.getCmp('modx-user-newpassword').setValue(true);
+                            this.markDirty();
                         },scope:this}
                         ,'collapse': {fn:function(p) {
                             Ext.getCmp('modx-user-newpassword').setValue(false);
+                            this.markDirty();
                         },scope:this}
                     }
                     ,items: [{

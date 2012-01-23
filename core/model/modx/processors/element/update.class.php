@@ -38,6 +38,13 @@ abstract class modElementUpdateProcessor extends modObjectUpdateProcessor {
             }
         }
 
+        /* can't change content if static source is not writable */
+        if ($this->object->staticContentChanged()) {
+            if (!$this->object->isStaticSourceMutable()) {
+                $this->addFieldError('static_file', $this->modx->lexicon('element_static_source_immutable'));
+            }
+        }
+
         return !$this->hasErrors();
     }
 
@@ -56,6 +63,6 @@ abstract class modElementUpdateProcessor extends modObjectUpdateProcessor {
     }
 
     public function cleanup() {
-        return $this->success('',array_merge($this->object->get(array('id', 'name', 'description', 'locked', 'category')), array('previous_category' => $this->previousCategory)));
+        return $this->success('',array_merge($this->object->get(array('id', 'name', 'description', 'locked', 'category', 'content')), array('previous_category' => $this->previousCategory)));
     }
 }

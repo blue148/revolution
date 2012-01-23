@@ -173,6 +173,7 @@ Ext.extend(MODx.tree.Element,MODx.tree.Tree,{
     ,removeElement: function(itm,e) {
         var id = this.cm.activeNode.id.substr(2);
         var oar = id.split('_');
+        MODx.debug(MODx.action);
         MODx.msg.confirm({
             title: _('warning')
             ,text: _('remove_this_confirm',{
@@ -187,6 +188,44 @@ Ext.extend(MODx.tree.Element,MODx.tree.Tree,{
             ,listeners: {
                 'success': {fn:function() {
                     this.cm.activeNode.remove();
+                    /* if editing the element being removed */
+                    if (MODx.request.a == MODx.action['element/'+oar[0]+'/update'] && MODx.request.id == oar[2]) {
+                        location.href = 'index.php?a='+MODx.action['welcome'];
+                    }
+                },scope:this}
+            }
+        });
+    }
+
+    ,activatePlugin: function(itm,e) {
+        var id = this.cm.activeNode.id.substr(2);
+        var oar = id.split('_');
+        MODx.Ajax.request({
+            url: MODx.config.connectors_url+'element/plugin.php'
+            ,params: {
+                action: 'activate'
+                ,id: oar[2]
+            }
+            ,listeners: {
+                'success': {fn:function() {
+                    this.refreshParentNode();
+                },scope:this}
+            }
+        });
+    }
+
+    ,deactivatePlugin: function(itm,e) {
+        var id = this.cm.activeNode.id.substr(2);
+        var oar = id.split('_');
+        MODx.Ajax.request({
+            url: MODx.config.connectors_url+'element/plugin.php'
+            ,params: {
+                action: 'deactivate'
+                ,id: oar[2]
+            }
+            ,listeners: {
+                'success': {fn:function() {
+                    this.refreshParentNode();
                 },scope:this}
             }
         });
@@ -359,7 +398,7 @@ Ext.extend(MODx.tree.Element,MODx.tree.Tree,{
         
         if (ui.hasClass('pedit')) {
             m.push({
-                text: _('edit')+' '+a.elementType
+                text: _('edit_'+a.type)
                 ,type: a.type
                 ,pk: a.pk
                 ,handler: function(itm,e) {
@@ -375,10 +414,25 @@ Ext.extend(MODx.tree.Element,MODx.tree.Tree,{
                     this.quickUpdate(itm,e,itm.type);
                 }
             });
+            if (a.classKey = 'modPlugin') {
+                if (a.active) {
+                    m.push({
+                        text: _('plugin_deactivate')
+                        ,type: a.type
+                        ,handler: this.deactivatePlugin
+                    });
+                } else {
+                    m.push({
+                        text: _('plugin_activate')
+                        ,type: a.type
+                        ,handler: this.activatePlugin
+                    });
+                }
+            }
         }
         if (ui.hasClass('pnew')) {
             m.push({
-                text: _('duplicate')+' '+a.elementType
+                text: _('duplicate_'+a.type)
                 ,pk: a.pk
                 ,type: a.type
                 ,handler: function(itm,e) {
@@ -388,14 +442,14 @@ Ext.extend(MODx.tree.Element,MODx.tree.Tree,{
         }
         if (ui.hasClass('pdelete')) {
             m.push({
-                text: _('remove')+' '+a.elementType
+                text: _('remove_'+a.type)
                 ,handler: this.removeElement
             });
         }
         m.push('-');
         if (ui.hasClass('pnew')) {
             m.push({
-                text: _('add_to_category_this',{type:a.elementType})
+                text: _('add_to_category_'+a.type)
                 ,handler: this._createElement
             });
         }
@@ -435,7 +489,7 @@ Ext.extend(MODx.tree.Element,MODx.tree.Tree,{
 
         if (a.elementType) {
             m.push({
-                text: _('add_to_category_this',{type: Ext.util.Format.capitalize(a.type)})
+                text: _('add_to_category_'+a.type)
                 ,handler: this._createElement
             });
         }
@@ -458,7 +512,7 @@ Ext.extend(MODx.tree.Element,MODx.tree.Tree,{
 
         if (ui.hasClass('pnew')) {
             m.push({
-                text: _('new'+'_'+a.type)
+                text: _('new_'+a.type)
                 ,handler: this._createElement
             });
             m.push({
