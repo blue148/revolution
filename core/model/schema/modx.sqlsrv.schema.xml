@@ -151,7 +151,8 @@
         <field key="name" dbtype="nvarchar" precision="255" phptype="string" null="false" default="" index="index" />
         <field key="description" dbtype="nvarchar" precision="max" phptype="string" null="false" default="" />
         <field key="value" dbtype="bit" phptype="boolean" null="false" default="1" />
-        
+        <field key="group" dbtype="varchar" precision="255" phptype="string" null="false" default="group.uncategorized" />
+
         <index alias="template" name="template" primary="false" unique="false" type="BTREE">
             <column key="template" length="" collation="A" null="false" />
         </index>

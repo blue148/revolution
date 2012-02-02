@@ -101,7 +101,7 @@ MODx.panel.AccessPolicy = function(config) {
 					,bodyCssClass: 'panel-desc'
                     ,border: false
                 },{
-                    xtype: 'modx-grid-policy-permissions'
+                    xtype: 'modx-tree-policy-permissions'
 					,cls:'main-wrapper'
                     ,policy: MODx.request.id
                     ,autoHeight: true
@@ -126,10 +126,7 @@ Ext.extend(MODx.panel.AccessPolicy,MODx.FormPanel,{
         }
         if (!this.initialized) {
             var r = this.config.record;
-
             this.getForm().setValues(r);
-            var g = Ext.getCmp('modx-grid-policy-permissions');
-            if (g) { g.getStore().loadData(r.permissions); }
 
             this.fireEvent('ready');
             MODx.fireEvent('ready');
@@ -137,70 +134,45 @@ Ext.extend(MODx.panel.AccessPolicy,MODx.FormPanel,{
         }
     }
     ,beforeSubmit: function(o) {
-        var g = Ext.getCmp('modx-grid-policy-permissions');
+        var g = Ext.getCmp('modx-tree-policy-permissions');
+        var perms = {};
+        if (g) {
+            var i = 0;
+            Ext.each(g.getChecked(),function(node) {
+                perms[i] = { name: node.id, enabled: true };
+                i++;
+            });
+        }
         Ext.apply(o.form.baseParams,{
-            permissions: g ? g.encode() : {}
+            permissions: Ext.encode(perms)
         });
     }
     
     ,success: function(o) {
-        Ext.getCmp('modx-grid-policy-permissions').getStore().commitChanges();
+        Ext.getCmp('modx-tree-policy-permissions').refresh();
     }
 });
 Ext.reg('modx-panel-access-policy',MODx.panel.AccessPolicy);
 
-
-
-MODx.grid.PolicyPermissions = function(config) {
+MODx.tree.PolicyPermissions = function(config) {
     config = config || {};
-    var ac = new Ext.ux.grid.CheckColumn({
-        header: _('enabled')
-        ,dataIndex: 'enabled'
-        ,width: 40
-        ,sortable: false
-    });
     Ext.applyIf(config,{
-        id: 'modx-grid-policy-permissions'
-        ,url: MODx.config.connectors_url+'security/access/policy/index.php'
+        id: 'modx-tree-policy-permissions'
+        ,url: MODx.config.connectors_url+'security/access/index.php'
+        ,action: 'policy/getattributes'
         ,baseParams: {
-            action: 'getAttributes'
+            id: config.policy
         }
-        ,cls: 'modx-grid modx-policy-permissions-grid'
-        ,fields: ['name','description','description_trans','value','enabled']
-        ,plugins: ac
-        ,columns: [{
-            header: _('name')
-            ,dataIndex: 'name'
-            ,width: 100
-            ,editor: { xtype: 'textfield', renderer: true }
-        },{
-            header: _('description')
-            ,dataIndex: 'description_trans'
-            ,width: 250
-            ,editable: false
-        },ac]
-        ,data: []
-        ,width: '90%'
-        ,height: 300
-        ,maxHeight: 300
-        ,autosave: false
-        ,autoExpandColumn: 'name'
+        ,rootVisible: false
     });
-    MODx.grid.PolicyPermissions.superclass.constructor.call(this,config);
-    this.propRecord = new Ext.data.Record.create(['name','description','access','value']);
-    this.on('rowclick',this.onPermRowClick,this);
+    MODx.tree.PolicyPermissions.superclass.constructor.call(this, config);
 };
-Ext.extend(MODx.grid.PolicyPermissions,MODx.grid.LocalGrid,{
-    onPermRowClick: function(g,ri,e) {
-        var s = this.getStore();
-        if (!s) { return; }
-
-        var r = s.getAt(ri);
-        r.set('enabled',r.get('enabled') ? false : true);
-        r.commit();
+Ext.extend(MODx.tree.PolicyPermissions,MODx.tree.Tree,{
+    getMenu: function(node, event) {
+        return [];
     }
 });
-Ext.reg('modx-grid-policy-permissions',MODx.grid.PolicyPermissions);
+Ext.reg('modx-tree-policy-permissions',MODx.tree.PolicyPermissions);
 
 
 MODx.combo.AccessPolicyTemplate = function(config) {

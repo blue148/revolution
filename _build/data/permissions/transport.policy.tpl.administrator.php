@@ -9,106 +9,127 @@ $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'about',
     'description' => 'perm.about_desc',
     'value' => true,
+    'group' => 'group.menuitems',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'access_permissions',
     'description' => 'perm.access_permissions_desc',
     'value' => true,
+    'group' => 'group.security',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'actions',
     'description' => 'perm.actions_desc',
     'value' => true,
+    'group' => 'group.menuitems',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'change_password',
     'description' => 'perm.change_password_desc',
     'value' => true,
+    'group' => 'group.user',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'change_profile',
     'description' => 'perm.change_profile_desc',
     'value' => true,
+    'group' => 'group.user',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'charsets',
     'description' => 'perm.charsets_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'class_map',
     'description' => 'perm.class_map_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'components',
     'description' => 'perm.components_desc',
     'value' => true,
+    'group' => 'group.menus',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'content_types',
     'description' => 'perm.content_types_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'countries',
     'description' => 'perm.countries_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'create',
     'description' => 'perm.create_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'credits',
     'description' => 'perm.credits_desc',
     'value' => true,
+    'group' => 'group.menu',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'customize_forms',
     'description' => 'perm.customize_forms_desc',
     'value' => true,
+    'group' => 'group.security',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'dashboards',
     'description' => 'perm.dashboards_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'database',
     'description' => 'perm.database_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'database_truncate',
     'description' => 'perm.database_truncate_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'delete_category',
     'description' => 'perm.delete_category_desc',
     'value' => true,
+    'group' => 'group.categories',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'delete_chunk',
     'description' => 'perm.delete_chunk_desc',
     'value' => true,
+    'group' => 'group.categories',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'delete_context',
     'description' => 'perm.delete_context_desc',
     'value' => true,
+    'group' => 'group.contexts',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'delete_document',
     'description' => 'perm.delete_document_desc',
     'value' => true,
+    'group' => 'group.resources',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'delete_eventlog',
     'description' => 'perm.delete_eventlog_desc',
     'value' => true,
+    'group' => 'group.system',
 ));
 $permissions[] = $xpdo->newObject('modAccessPermission',array(
     'name' => 'delete_plugin',

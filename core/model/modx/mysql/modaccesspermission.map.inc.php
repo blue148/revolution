@@ -13,6 +13,7 @@ $xpdo_meta_map['modAccessPermission']= array (
     'name' => '',
     'description' => '',
     'value' => 1,
+    'group' => 'group.uncategorized',
   ),
   'fieldMeta' => 
   array (
@@ -50,6 +51,14 @@ $xpdo_meta_map['modAccessPermission']= array (
       'attributes' => 'unsigned',
       'null' => false,
       'default' => 1,
+    ),
+    'group' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '255',
+      'phptype' => 'string',
+      'null' => false,
+      'default' => 'group.uncategorized',
     ),
   ),
   'indexes' => 

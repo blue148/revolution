@@ -54,6 +54,7 @@ class modAccessPolicy extends xPDOSimpleObject {
                 $desc,
                 $permission->get('value'),
                 $active,
+                $permission->get('group')
             );
         }
         return $list;
