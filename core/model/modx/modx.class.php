@@ -266,6 +266,10 @@ class modX extends xPDO {
     );
     /** @var modCacheManager $cacheManager */
     public $cacheManager;
+    /**
+     * @var modProfiler $profiler
+     */
+    public $profiler;
 
     /**
      * @deprecated
@@ -514,6 +518,8 @@ class modX extends xPDO {
 
             $this->getCacheManager();
             $this->getConfig();
+            $this->getConfig();
+            $this->getService('profiler','modProfiler','',array('enabled' => $this->getOption('profile_requests', $this->config, true))); //@todo disable by default
             $this->_initContext($contextKey, false, $options);
             $this->_loadExtensionPackages($options);
             $this->_initSession($options);

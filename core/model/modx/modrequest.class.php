@@ -71,6 +71,7 @@ class modRequest {
      * @return boolean True if a request is handled without interruption.
      */
     public function handleRequest() {
+        $profilerId = $this->modx->profiler->startProfile('modRequest/handleRequest', 'core');
         $this->loadErrorHandler();
 
         $this->sanitizeRequest();
@@ -125,6 +126,7 @@ class modRequest {
             }
         }
 
+        $this->modx->profiler->stopProfile($profilerId);
         return $this->prepareResponse();
     }
 
@@ -176,6 +178,7 @@ class modRequest {
      * is forwarded to the error page, or unauthorized page.
      */
     public function getResource($method, $identifier, array $options = array()) {
+        $profilerId = $this->modx->profiler->startProfile('modRequest/getResource', 'core', array('method' => $method, 'identifier' => $identifier, 'options' => $options));
         $resource = null;
         if ($method == 'alias') {
             $resourceId = $this->modx->aliasMap[$identifier];
@@ -276,6 +279,7 @@ class modRequest {
             }
             $this->modx->invokeEvent('OnLoadWebPageCache');
         }
+        $this->modx->profiler->stopProfile($profilerId);
         return $resource;
     }
 

@@ -99,6 +99,7 @@ class modParser {
      * @return integer The number of tags collected from the content.
      */
     public function collectElementTags($origContent, array &$matches, $prefix= '[[', $suffix= ']]') {
+        $profilerId = $this->modx->profiler->startProfile('modParser/collectElementTags');
         $matchCount= 0;
         if (!empty ($origContent) && is_string($origContent) && strpos($origContent, $prefix) !== false) {
             $openCount= 0;
@@ -165,6 +166,10 @@ class modParser {
             $this->modx->log(modX::LOG_LEVEL_DEBUG, "modParser::collectElementTags \$matches = " . print_r($matches, 1) . "\n");
             /* $this->modx->cacheManager->writeFile(MODX_CORE_PATH . 'logs/parser.log', print_r($matches, 1) . "\n", 'a'); */
         }
+        $this->modx->profiler->stopProfile($profilerId,array(
+            'matchCount' => $matchCount,
+            'matches' => $matches,
+        ));
         return $matchCount;
     }
 

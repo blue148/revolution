@@ -52,6 +52,9 @@ class modScript extends modElement {
      * {@inheritdoc}
      */
     public function process($properties= null, $content= null) {
+        $profilerId = $this->xpdo->profiler->startProfile('modScript/process', 'core', array(
+            'tag' => $this->getTag(),
+        ));
         parent :: process($properties, $content);
         if (!$this->_processed) {
             $scriptName= $this->getScriptName();
@@ -88,6 +91,7 @@ class modScript extends modElement {
         $this->_processed= true;
 
         /* finally, return the processed element content */
+        $this->xpdo->profiler->stopProfile($profilerId);
         return $this->_output;
     }
 
