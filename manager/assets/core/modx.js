@@ -9,9 +9,10 @@
 var MODX = MODX || {};
 MODX._construct = function(jQuery, MODX) {
     this.init = function() {
-        var self = this;
         this.jQuery = jQuery;
         this.initElements();
+        this.setupAjax();
+        this.State = this.State._construct(this);
         this.initGlobalListeners();
         this.setContainerHeight();
         this.autoLoadComponents();
@@ -51,6 +52,15 @@ MODX._construct = function(jQuery, MODX) {
         this.elements.window = this.jQuery(window);
     };
 
+    this.setupAjax = function() {
+        this.jQuery.ajaxSetup({
+            headers: {
+                'modAuth': this.auth,
+                'Powered-By': 'MODX Revolution'
+            }
+        });
+    };
+
     /**
      * Calculates the proper height for the #modx-container div to prevent scrolling
      * while filling 100% of the height.
@@ -70,17 +80,27 @@ MODX._construct = function(jQuery, MODX) {
          */
         var tabStrips = this.jQuery('div[data-role=tabs]');
         this.jQuery.each(tabStrips, function() {
+            var options = {};
             var tab = this;
             var $tab = that.jQuery(tab);
-            var active = $tab.data('active');
-            var activeLi = $tab.find('ul > li')[active];
-            that.jQuery(activeLi).addClass('k-state-active');
 
-            var options = {
-                activate: function(e) {
-                    that.State.set(tab.id, $(e.item).index());
+            /* Stateful tabs */
+            var stateful = $tab.data('stateful');
+            if (stateful) {
+                /* Get current state */
+                var active = that.State.get(tab.id);
+                if (active == undefined) {
+                    active = $tab.data('stateful-default') || 0;
                 }
-            };
+
+                var activeTab = $tab.find('ul > li')[active];
+                that.jQuery(activeTab).addClass('k-state-active');
+                console.log(active, activeTab);
+
+                options.activate = function(e) {
+                    that.State.set(tab.id, $(e.item).index());
+                };
+            }
 
             $tab.kendoTabStrip(options);
             that.components.tabStrips[tab.id] = $tab;
@@ -99,10 +119,6 @@ MODX._construct = function(jQuery, MODX) {
     this.ajax = function(connector, params, ajaxOptions) {
         params = params || {};
         ajaxOptions = this.extend(ajaxOptions,{
-            headers: {
-                'modAuth': this.config.auth,
-                'Powered-By': 'MODX Revolution'
-            },
             data: params,
             type: 'POST'
         });
@@ -130,17 +146,6 @@ MODX._construct = function(jQuery, MODX) {
 
     return this.init();
 };
-
-$(document).on('ready', function() {
-    MODX = MODX._construct(jQuery, MODX);
-    MODX.State._construct(MODX);
-
-    /**
-     * Migrate stuff from MODx to MODX during development while connectors are untouched.
-     * @type {*}
-     */
-    //MODX.extend(MODX, MODx);
-});
 
 
 /**
