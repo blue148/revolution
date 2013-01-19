@@ -6,85 +6,63 @@
  * manager and uses jQuery for a bunch of the heavy lifting.
  * @type {Object}
  */
-var MODX = {
-    /**
-     * Cache of commonly accessed elements.
-     */
-    elements: {},
+var MODX = MODX || {};
+MODX._construct = function(jQuery, MODX) {
+    this.init = function() {
+        var self = this;
+        this.jQuery = jQuery;
+        this.initElements();
+        this.initGlobalListeners();
+        this.setContainerHeight();
+        this.autoLoadComponents();
 
-    components: {
-        tabStrips: {}
-    },
-    /**
-     * Lexicon translations.
-     */
-    lang: {},
-    /**
-     * Default config options; primarily to make development easier with autocomplete
-     * usually not available due to the external config loading.
-     */
-    config: {},
+        return this;
+    };
+
     /**
      * Provide reference to jQuery. Use these instead of jQuery directly to aid
      * future testing and portability.
      */
-    jQuery: null,
+    this.jQuery = jQuery;
     /**
-     * Initiates this MODX instance and does the initiating it needs to do.
-     *
-     * @param jq jQuery instance.
+     * Cache of commonly accessed elements.
      */
-    init: function(jq) {
-        this.jQuery = jq;
-        this.initElements();
-        this.initGlobalListeners();
-        this.setContainerHeight();
-
-        this.autoLoadComponents();
-    },
+    this.elements = {};
+    this.components = {
+        tabStrips: {}
+    };
 
     /**
      * Set up listeners for various core/global events affecting
      * the entire framework/manager.
      */
-    initGlobalListeners: function() {
+    this.initGlobalListeners = function() {
         this.elements.window.resize(function() {
-            MODX.setContainerHeight()
+            self.setContainerHeight()
         });
-    },
+    };
 
     /**
      * Make certain elements available through a simple cache for best performance.
      */
-    initElements: function() {
+    this.initElements = function() {
         this.elements.modxTop = this.jQuery('#modx-top');
         this.elements.modxContainer = this.jQuery('#modx-container');
         this.elements.window = this.jQuery(window);
-    },
+    };
 
     /**
      * Calculates the proper height for the #modx-container div to prevent scrolling
      * while filling 100% of the height.
      */
-    setContainerHeight: function() {
+    this.setContainerHeight = function() {
         var windowHeight = this.elements.window.outerHeight();
         var topHeight = this.elements.modxTop.outerHeight();
         var containerHeight = windowHeight - topHeight;
         this.elements.modxContainer.css('height', containerHeight);
-    },
+    };
 
-    saveState: function(key, value) {
-        alert('Save state for '+ key + ' as ' + value);
-        this.ajax('system/registry/register.php',{
-            action: 'send',
-            register: 'state',
-            topic: '/ys/user-' + this.user.id + '/',
-            message: '{'+key+':'+value+'}',
-            message_format: 'json'
-        }, {})
-    },
-
-    autoLoadComponents: function() {
+    this.autoLoadComponents = function() {
         var that = this;
 
         /**
@@ -100,14 +78,14 @@ var MODX = {
 
             var options = {
                 activate: function(e) {
-                    that.saveState(tab.id, $(e.item).index());
+                    that.State.set(tab.id, $(e.item).index());
                 }
             };
 
             $tab.kendoTabStrip(options);
             that.components.tabStrips[tab.id] = $tab;
         }, this);
-    },
+    };
 
     /**
      * Request data from MODX-style connector/processors using {jQuery.ajax}.
@@ -118,7 +96,7 @@ var MODX = {
      * @return {*}
      * @constructor
      */
-    ajax: function(connector, params, ajaxOptions) {
+    this.ajax = function(connector, params, ajaxOptions) {
         params = params || {};
         ajaxOptions = this.extend(ajaxOptions,{
             headers: {
@@ -136,7 +114,7 @@ var MODX = {
         }
         url = url + connector;
         return this.jQuery.ajax(url, ajaxOptions);
-    },
+    };
 
     /**
      * Returns a recursively merged object.
@@ -146,19 +124,22 @@ var MODX = {
      * @param object
      * @return {*}
      */
-    extend: function(target, object) {
+    this.extend = function(target, object) {
         return this.jQuery.extend(true, target, object);
-    }
+    };
+
+    return this.init();
 };
 
 $(document).on('ready', function() {
-    MODX.init(jQuery);
+    MODX = MODX._construct(jQuery, MODX);
+    MODX.State._construct(MODX);
 
     /**
      * Migrate stuff from MODx to MODX during development while connectors are untouched.
      * @type {*}
      */
-    MODX.extend(MODX, MODx);
+    //MODX.extend(MODX, MODx);
 });
 
 

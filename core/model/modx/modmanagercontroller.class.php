@@ -477,29 +477,7 @@ abstract class modManagerController {
         $externals = array();
 
         if ($this->loadBaseJavascript) {
-            $externals[] = $managerUrl.'assets/modext/core/modx.localization.js';
-            $externals[] = $managerUrl.'assets/modext/util/utilities.js';
-
-            $externals[] = $managerUrl.'assets/modext/core/modx.component.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/core/modx.panel.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/core/modx.tabs.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/core/modx.window.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/core/modx.tree.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/core/modx.combo.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/core/modx.grid.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/core/modx.console.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/core/modx.portal.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/modx.treedrop.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/windows.js';
-
-            $externals[] = $managerUrl.'assets/modext/widgets/resource/modx.tree.resource.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/element/modx.tree.element.js';
-            $externals[] = $managerUrl.'assets/modext/widgets/system/modx.tree.directory.js';
-            $externals[] = $managerUrl.'assets/modext/core/modx.view.js';
-            
             $siteId = $this->modx->user->getUserToken('mgr');
-
-            $externals[] = $managerUrl.'assets/modext/core/modx.layout.js';
 
             $o = '';
             $compressJs = (boolean)$this->modx->getOption('compress_js',null,true);
@@ -535,14 +513,16 @@ abstract class modManagerController {
                 $this->modx->setOption('compress_css',true);
             }
 
+            $o .= '<script type="text/javascript">';
+            /* Get state */
             $state = $this->getDefaultState();
             if (!empty($state)) {
-                $state = 'MODx.defaultState = '.$this->modx->toJSON($state).';';
-            } else { $state = ''; }
-            $o .= '<script type="text/javascript">Ext.onReady(function() {
-                '.$state.'
-    MODx.load({xtype: "modx-layout",accordionPanels: MODx.accordionPanels || [],auth: "'.$siteId.'"});
-});</script>';
+                $o .= 'MODX.State.data = '.$this->modx->toJSON($state).";\n";
+            }
+
+            /* Make auth token available to the javascript */
+            $o .= 'MODX.auth = "'.$siteId.'";
+            </script>';
             $this->modx->smarty->assign('maincssjs',$o);
         }
     }

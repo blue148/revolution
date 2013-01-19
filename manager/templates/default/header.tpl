@@ -22,6 +22,7 @@
     {else}
         <script src="{$_config.manager_url}assets/jquery/jquery-1.8.3.js" type="text/javascript"></script>
         <script src="{$_config.manager_url}assets/core/modx.js" type="text/javascript"></script>
+        <script src="{$_config.manager_url}assets/core/modx.state.js" type="text/javascript"></script>
 
         <script src="{$_config.manager_url}assets/kendoui/src/js/kendo.web.js" type="text/javascript"></script>
         <script src="{$_config.manager_url}assets/kendoui/src/js/kendo.tabstrip.js" type="text/javascript"></script>

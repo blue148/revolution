@@ -54,7 +54,7 @@ $c = array(
     'resource_classes' => $resourceClasses,
 );
 
-/* if custom context, load into MODx.config */
+/* if custom context, load into MODX.config */
 if (isset($scriptProperties['action']) && $scriptProperties['action'] != '' && isset($modx->actionMap[$scriptProperties['action']])) {
 
     /* pre-2.3 actions */
@@ -81,27 +81,27 @@ $c = array_merge($modx->config,$workingContext->config,$c);
 
 unset($c['password'],$c['username'],$c['mail_smtp_pass'],$c['mail_smtp_user'],$c['proxy_password'],$c['proxy_username']);
 
-$o = "Ext.namespace('MODx'); MODx.config = ";
+$o = "MODX.config = ";
 $o .= $modx->toJSON($c);
-$o .= '; MODx.perm = {};';
+$o .= '; MODX.perm = {};';
 if ($modx->user) {
-    if ($modx->hasPermission('directory_create')) { $o .= 'MODx.perm.directory_create = true;'; }
-    if ($modx->hasPermission('resource_tree')) { $o .= 'MODx.perm.resource_tree = true;'; }
-    if ($modx->hasPermission('element_tree')) { $o .= 'MODx.perm.element_tree = true;'; }
-    if ($modx->hasPermission('file_tree')) { $o .= 'MODx.perm.file_tree = true;'; }
-    if ($modx->hasPermission('file_upload')) { $o .= 'MODx.perm.file_upload = true;'; }
-    if ($modx->hasPermission('file_create')) { $o .= 'MODx.perm.file_create = true;'; }
-    if ($modx->hasPermission('file_manager')) { $o .= 'MODx.perm.file_manager = true;'; }
-    if ($modx->hasPermission('new_chunk')) { $o .= 'MODx.perm.new_chunk  = true;'; }
-    if ($modx->hasPermission('new_plugin')) { $o .= 'MODx.perm.new_plugin = true;'; }
-    if ($modx->hasPermission('new_snippet')) { $o .= 'MODx.perm.new_snippet = true;'; }
-    if ($modx->hasPermission('new_template')) { $o .= 'MODx.perm.new_template = true;'; }
-    if ($modx->hasPermission('new_tv')) { $o .= 'MODx.perm.new_tv = true;'; }
-    if ($modx->hasPermission('new_category')) { $o .= 'MODx.perm.new_category = true;'; }
-    if ($modx->hasPermission('resourcegroup_resource_edit')) { $o .= 'MODx.perm.resourcegroup_resource_edit = true;'; }
-    if ($modx->hasPermission('resourcegroup_resource_list')) { $o .= 'MODx.perm.resourcegroup_resource_list = true;'; }
+    if ($modx->hasPermission('directory_create')) { $o .= 'MODX.perm.directory_create = true;'; }
+    if ($modx->hasPermission('resource_tree')) { $o .= 'MODX.perm.resource_tree = true;'; }
+    if ($modx->hasPermission('element_tree')) { $o .= 'MODX.perm.element_tree = true;'; }
+    if ($modx->hasPermission('file_tree')) { $o .= 'MODX.perm.file_tree = true;'; }
+    if ($modx->hasPermission('file_upload')) { $o .= 'MODX.perm.file_upload = true;'; }
+    if ($modx->hasPermission('file_create')) { $o .= 'MODX.perm.file_create = true;'; }
+    if ($modx->hasPermission('file_manager')) { $o .= 'MODX.perm.file_manager = true;'; }
+    if ($modx->hasPermission('new_chunk')) { $o .= 'MODX.perm.new_chunk  = true;'; }
+    if ($modx->hasPermission('new_plugin')) { $o .= 'MODX.perm.new_plugin = true;'; }
+    if ($modx->hasPermission('new_snippet')) { $o .= 'MODX.perm.new_snippet = true;'; }
+    if ($modx->hasPermission('new_template')) { $o .= 'MODX.perm.new_template = true;'; }
+    if ($modx->hasPermission('new_tv')) { $o .= 'MODX.perm.new_tv = true;'; }
+    if ($modx->hasPermission('new_category')) { $o .= 'MODX.perm.new_category = true;'; }
+    if ($modx->hasPermission('resourcegroup_resource_edit')) { $o .= 'MODX.perm.resourcegroup_resource_edit = true;'; }
+    if ($modx->hasPermission('resourcegroup_resource_list')) { $o .= 'MODX.perm.resourcegroup_resource_list = true;'; }
 
-    $o .= 'MODx.user = {id:"'.$modx->user->get('id').'",username:"'.$modx->user->get('username').'"}';
+    $o .= 'MODX.user = {id:"'.$modx->user->get('id').'",username:"'.$modx->user->get('username').'"}';
 }
 @session_write_close();
 header('Content-Type: application/x-javascript');

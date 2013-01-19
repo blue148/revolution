@@ -17,7 +17,7 @@ if (!empty($_REQUEST['topic'])) {
 
 $entries = $modx->lexicon->fetch();
 echo '
-MODx.lang = {';
+MODX.lang = {';
 $s = '';
 while (list($k,$v) = each ($entries)) {
     $s .= "'$k': ".'"'.esc($v).'",';
@@ -27,12 +27,12 @@ echo $s.'
 };
 var _ = function(s,v) {
     if (v != null && typeof(v) == "object") {
-        var t = ""+MODx.lang[s];
+        var t = ""+MODX.lang[s];
         for (var k in v) {
             t = t.replace("[[+"+k+"]]",v[k]);
         }
         return t;
-    } else return MODx.lang[s];
+    } else return MODX.lang[s];
 }';
 
 function esc($s) {
