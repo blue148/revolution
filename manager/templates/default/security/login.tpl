@@ -6,6 +6,7 @@
       manifest="{$_config.manager_url}cache.manifest.php"{/if}>
 <head>
     <title>{if $_pagetitle}{$_pagetitle} | {/if}{$_config.site_name}</title>
+    <meta name="robots" content="noindex, nofollow"/>
     <meta http-equiv="Content-Type" content="text/html; charset={$_config.modx_charset}"/>
 
 {if $_config.manager_favicon_url}
@@ -26,24 +27,30 @@
 
 {if $_config.compress_js}
     <script src="{$_config.manager_url}assets/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        alert('Note: this version (the jQuery one) of the manager does not yet support the compress_js setting.');
+    </script>
     {else}
     <script src="{$_config.manager_url}assets/jquery/jquery-1.8.3.js" type="text/javascript"></script>
-    <script src="{$_config.manager_url}assets/core/modx.state.js" type="text/javascript"></script>
     <script src="{$_config.manager_url}assets/core/modx.js" type="text/javascript"></script>
-
+    <script src="{$_config.manager_url}assets/core/modx.state.js" type="text/javascript"></script>
     <script src="{$_config.manager_url}assets/kendoui/src/js/kendo.web.js" type="text/javascript"></script>
+    <script src="{$_config.manager_url}assets/core/modules/base.js" type="text/javascript"></script>
+    <script src="{$_config.manager_url}assets/core/modules/tabs.js" type="text/javascript"></script>
+    <script src="{$_config.manager_url}assets/core/modules/toggle.js" type="text/javascript"></script>
 {/if}
 
-{$maincssjs}
+    {$maincssjs}
+
+    {foreach from=$cssjs item=scr}
+        {$scr}
+    {/foreach}
+
     <script type="text/javascript">
-        $(document).on('ready', function () {
-            MODX = MODX._construct(jQuery, MODX);
+        $(document).on('ready', function() {
+            MODX.init();
         });
     </script>
-{foreach from=$cssjs item=scr}
-    {$scr}
-{/foreach}
-    <meta name="robots" content="noindex, nofollow"/>
 </head>
 <body id="login">
 

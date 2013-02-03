@@ -25,12 +25,17 @@
 
 {if $_config.compress_js}
     <script src="{$_config.manager_url}assets/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        alert('Note: this version (the jQuery one) of the manager does not yet support the compress_js setting.');
+    </script>
     {else}
     <script src="{$_config.manager_url}assets/jquery/jquery-1.8.3.js" type="text/javascript"></script>
     <script src="{$_config.manager_url}assets/core/modx.js" type="text/javascript"></script>
     <script src="{$_config.manager_url}assets/core/modx.state.js" type="text/javascript"></script>
-
     <script src="{$_config.manager_url}assets/kendoui/src/js/kendo.web.js" type="text/javascript"></script>
+    <script src="{$_config.manager_url}assets/core/modules/base.js" type="text/javascript"></script>
+    <script src="{$_config.manager_url}assets/core/modules/tabs.js" type="text/javascript"></script>
+    <script src="{$_config.manager_url}assets/core/modules/toggle.js" type="text/javascript"></script>
 {/if}
 
     <script src="{$_config.connectors_url}lang.js.php?ctx=mgr&topic=topmenu,file,resource,{$_lang_topics}&action={$smarty.get.a|strip_tags}"
@@ -40,14 +45,15 @@
 
     {$maincssjs}
 
+    {foreach from=$cssjs item=scr}
+        {$scr}
+    {/foreach}
+
     <script type="text/javascript">
         $(document).on('ready', function() {
-            MODX = MODX._construct(jQuery, MODX);
+            MODX.init();
         });
     </script>
-{foreach from=$cssjs item=scr}
-    {$scr}
-{/foreach}
 </head>
 <body>
 <div id="modx-top">

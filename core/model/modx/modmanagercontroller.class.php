@@ -513,11 +513,11 @@ abstract class modManagerController {
                 $this->modx->setOption('compress_css',true);
             }
 
-            $o .= '<script type="text/javascript">';
             /* Get state */
+            $o .= '<script type="text/javascript">';
             $state = $this->getDefaultState();
             if (!empty($state)) {
-                $o .= 'MODX.State.setData('.$this->modx->toJSON($state).");\n";
+                $o .= 'MODX.State.setData('.$this->modx->toJSON($state)."); \n";
             }
 
             /* Make auth token available to the javascript */

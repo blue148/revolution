@@ -6,6 +6,8 @@
  */
 "use strict";
 (function( MODX ){
+    var $ = MODX.jQuery;
+
     /**
      * @type {Object}
      * @see MODX.State.get
@@ -56,7 +58,7 @@
          * @param stateData object
          */
         setData: function(stateData) {
-            data = MODX.jQuery.extend(data, stateData);
+            data = $.extend(data, stateData);
         }
     };
 })( MODX );
