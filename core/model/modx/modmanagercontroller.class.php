@@ -517,7 +517,7 @@ abstract class modManagerController {
             /* Get state */
             $state = $this->getDefaultState();
             if (!empty($state)) {
-                $o .= 'MODX.State.data = '.$this->modx->toJSON($state).";\n";
+                $o .= 'MODX.State.setData('.$this->modx->toJSON($state).");\n";
             }
 
             /* Make auth token available to the javascript */
