@@ -130,6 +130,12 @@ body {
     font-size: 11px;
 }
 
+h2 {
+    color: #5E5E5E;
+    font: normal 25px helvetica,arial,freesans,clean,sans-serif;
+    letter-spacing: -1px;
+    margin: 0 0 8px;
+}
 
 
 

@@ -9,6 +9,10 @@ class SecurityLoginManagerController extends modManagerController {
     public $loadHeader = false;
     public $loadFooter = false;
 
+    /**
+     * {@inheritdoc}
+     * @return bool
+     */
     public function initialize() {
         $this->handleLanguageChange();
         return true;

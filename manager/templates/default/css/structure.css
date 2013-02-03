@@ -33,7 +33,7 @@ input::-moz-focus-inner {
 .aright { text-align: right; }
 .right { float: right; }
 .left { float: left; }
-.clear { clear: left; }
+.clear { clear: both; }
 .bold { font-weight: bold; }
 .not-installed { color: red; }
 .red { color: red !important; }
@@ -300,4 +300,19 @@ html #modx-top-menu ul.modx-subnav li a:hover{
 
 
 
-
+/**
+ * Basic "panels"
+ */
+.row {
+    width: 100%;
+}
+.row .half {
+    float: left;
+    width: 48%;
+    margin-right: 2%;
+}
+.row .last.half {
+    width: 50%;
+    padding-right: 0;
+    margin-right: 0;
+}

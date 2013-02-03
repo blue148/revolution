@@ -34,6 +34,33 @@ MODX._construct = function(jQuery, MODX) {
     };
 
     /**
+     * Simple console.log wrapper which only logs if the console is available.
+     * This prevents breaking javascript in older versions of IE and allows
+     * more advanced logging methods in the future.
+     *
+     * If you want use a specific console method (the default is "log"), you can pass
+     * it as the first parameter. The following are allowed:
+     * - log
+     * - debug
+     * - info
+     * - warn
+     * - error
+     */
+    this.log = function() {
+        var method = 'log';
+        if (console) {
+            for(var i=0; i<arguments.length; i++) {
+                var val = arguments[i];
+                if ((i == 0) && (-1 < this.jQuery.inArray(val, ['log','debug', 'info', 'warn', 'error']))) {
+                    method = val;
+                } else {
+                    console[method](val);
+                }
+            }
+        }
+    },
+
+    /**
      * Set up listeners for various core/global events affecting
      * the entire framework/manager.
      */
@@ -95,7 +122,6 @@ MODX._construct = function(jQuery, MODX) {
 
                 var activeTab = $tab.find('ul > li')[active];
                 that.jQuery(activeTab).addClass('k-state-active');
-                console.log(active, activeTab);
 
                 options.activate = function(e) {
                     that.State.set(tab.id, $(e.item).index());
@@ -103,7 +129,39 @@ MODX._construct = function(jQuery, MODX) {
             }
 
             $tab.kendoTabStrip(options);
-            that.components.tabStrips[tab.id] = $tab;
+        }, this);
+
+        var displayTriggers = this.jQuery('[data-role=toggle]');
+        this.jQuery.each(displayTriggers, function() {
+            that.jQuery(this).click(function(event) {
+                event.preventDefault();
+                var el = $(this),
+                    target = el.data('target'),
+                    $target = that.jQuery(target),
+                    animated = el.data('animated'),
+                    hideTrigger = el.data('hide-trigger');
+                animated = animated ? animated : true;
+                hideTrigger = hideTrigger ? hideTrigger : false;
+
+                if ($target) {
+                    if (animated) {
+                        $target.slideToggle();
+                        if (hideTrigger) {
+                            el.fadeOut();
+                        }
+                    }
+                    /** Not animated */
+                    else {
+                        $target.toggle();
+                        if (hideTrigger) {
+                            el.hide();
+                        }
+                    }
+                } else {
+                    that.log('Toggle target not found. Trigger: ' + trigger + ' | Target: ' + target);
+                }
+
+            });
         }, this);
     };
 
